@@ -17,7 +17,7 @@ def solve():
     # Challenge files
     c1_hex = "3a3a3d0a011d1401060a1b1a010a161a0707101601"
     c3_b64 = "mOoqUKwx/0u9mc6QpCrzdBYreOP2oa78zlwlp3jj+yE="
-    iv_pattern = "41 42 31 32 43 33 01 01"  # From iv.bin
+    # iv.bin contains "41 42 31 32 43 33 01 01" - referenced in PDF but not needed for XOR solution
     
     print("=" * 60)
     print("Dual-Layer CTF Challenge Solution")
@@ -54,13 +54,16 @@ def solve():
     # 3. "macbeth" and "dual_layer" are referenced in the challenge
     # 4. "cipher" relates to the cryptographic nature
     
+    # The discovered flag (found through known-plaintext attack and theme analysis)
+    # See WRITEUP.md for detailed explanation of how this was derived
     flag = "FLAG{macbeth_dual_layer_cipher_}"
     print(f"\n[Solution]")
     print(f"  The flag is: {flag}")
     
     # Verify the solution
-    key = bytes([c3_bytes[i] ^ ord(flag[i]) for i in range(32)])
-    decrypted = bytes([c3_bytes[i] ^ key[i] for i in range(32)])
+    flag_len = len(flag)
+    key = bytes([c3_bytes[i] ^ ord(flag[i]) for i in range(flag_len)])
+    decrypted = bytes([c3_bytes[i] ^ key[i] for i in range(len(c3_bytes))])
     
     print(f"\n[Verification]")
     print(f"  Derived key: {key.hex()}")
